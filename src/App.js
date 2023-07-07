@@ -1,23 +1,36 @@
 import logo from './logo.svg';
 import './App.css';
+import styled from "styled-components";
+import {  } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Routes, Route } from 'react-router-dom';
+import Header from './Component/Header';
+import Login from './Component/Login';
+import ProductAll from './Component/ProductAll';
+import ProductDetail from './Component/ProductDetail';
+import { useEffect, useState } from 'react';
+import PrivateRouter from './Component/PrivateRouter';
+
+
+const Container = styled.div`
+
+
+`;
 
 function App() {
+  const [authenticate, setAuthenticate] = useState(false);
+  useEffect(() => {
+    console.log("login", authenticate)
+  }, [authenticate])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header authenticate={authenticate} setAuthenticate={setAuthenticate} />
+      <Routes>
+        <Route path='/' element={<ProductAll/>} />
+        <Route path='/login' element={<Login setAuthenticate={setAuthenticate} />} />
+        <Route path='/products/:id' element={<PrivateRouter authenticate={authenticate}/>} />
+      </Routes>
     </div>
   );
 }
