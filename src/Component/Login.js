@@ -9,7 +9,6 @@ const Wrap = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  border: 1px solid red;
 `;
 
 // const Form = styled.form`

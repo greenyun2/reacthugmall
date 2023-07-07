@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import NormalMall from './NormalMall';
 
 
 
@@ -14,6 +15,11 @@ margin-top: 20px;
 display: flex;
 align-items: center;
 justify-content: space-between;
+@media all and (max-width: 768px) {
+  div {
+    width: 100%;
+  }
+}
 `;
 
 const HeaderLogo = styled.div`
@@ -34,19 +40,26 @@ const HeaderMenu = styled.div`
   justify-content: space-between;
   align-items: center;
   .header_menu_list {
-    margin-left: 50px;
+    height: 100px;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
     gap: 31px;
+    margin-left: 50px;
     li {
       list-style: none;
       a {
+        margin-right: 50px;
         text-decoration: none;
         color: #000;
       }
+      .toggle_box {
+        position: absolute;
+        border: 1px solid #ccc;
+        cursor: pointer;
+      }
     }
   }
-
 `;
 
 
@@ -59,13 +72,47 @@ const HeaderLoginCheck = styled.div`
 `;
 
 
-const Header = ({authenticate, setAuthenticate}) => {
-  const menu = ['SHOP', 'LIVE', '고객센터'];
-  const shopList = ['산후조리원 회원 몰', '산후조리원 졸업회원 몰'];
-  const csList = ['자주하는 질문', '공지사항'];
-  const [showShop, setShowShop] = useState(shopList);
+const menuItems = ['SHOP', 'LIVE', '고객센터'];
+const shopList = ['산후조리원 회원 몰', '산후조리원 졸업회원 몰'];
+const csList = ['자주하는 질문', '공지사항'];
 
+const Header = ({authenticate, setAuthenticate}) => {
+  const [toggleContent, setToggleContent] = useState('');
   const navigate = useNavigate();
+
+  const handleMouseEnter = (content) => {
+    setToggleContent(content);
+  };
+
+  const handleMouseLeave = () => {
+    setToggleContent('');
+  };
+
+
+  const renderToggleContent = () => {
+    switch (toggleContent) {
+      case 'SHOP':
+        return (
+          <div className='toggle_box first_toggle_box'>
+            {shopList.map((item, index) => (
+              <div key={index} onClick={() => navigate('/normal')}>{item}</div>
+            ))}
+          </div>
+        );
+      case '고객센터':
+        return (
+          <div className='toggle_box'>
+            {csList.map((item, index) => (
+              <div key={index} onClick={() => navigate('/')}>{item}</div>
+            ))}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  
   
   const search = (event) => {
     if(event.key === "Enter") {
@@ -77,33 +124,30 @@ const Header = ({authenticate, setAuthenticate}) => {
 
   return (
     <Container>
-
       <HeaderLogo>
         <a href='/'>
           <img src="img/hugmom_logo_type_1.png" />
         </a>
       </HeaderLogo>
-
       <HeaderMenu>
-        <ul className='header_menu_list'>
-          {menu.map((item, index) => (
-            <li>
-              <a href='#' key={index}>
-                {item}
-              </a>
-              <ul>
-
-              </ul>
-            </li>
-          ))}
-        </ul>
+      <ul className='header_menu_list'>
+      {menuItems.map((menuItem, index) => (
+        <li
+          key={index}
+          onMouseEnter={() => handleMouseEnter(menuItem)}
+          onMouseLeave={handleMouseLeave}
+        >
+          <a>{menuItem}</a>
+          {toggleContent === menuItem && renderToggleContent()}
+        </li>
+      ))}
+    </ul>
       </HeaderMenu>
-
       <HeaderSearch>
-        <FontAwesomeIcon icon={faSearch} className='search-icon' />
-        <input type='text' placeholder='제품검색' onKeyPress={search} />
+      <input type='text' placeholder='제품검색' onKeyPress={search} />
+        <FontAwesomeIcon icon={faSearch} 
+        className='search-icon' />
       </HeaderSearch>
-
       <HeaderLoginCheck>
         { authenticate ? (
           <div onClick={() => setAuthenticate(false)}>
@@ -118,9 +162,8 @@ const Header = ({authenticate, setAuthenticate}) => {
         )
       }
       </HeaderLoginCheck>
-
     </Container>
   )
-}
+    }
 
-export default Header
+export default Header;

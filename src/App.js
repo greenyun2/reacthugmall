@@ -10,12 +10,9 @@ import ProductAll from './Component/ProductAll';
 import ProductDetail from './Component/ProductDetail';
 import { useEffect, useState } from 'react';
 import PrivateRouter from './Component/PrivateRouter';
+import NormalMall from './Component/NormalMall';
+import GraduationMall from './Component/GraduationMall';
 
-
-const Container = styled.div`
-
-
-`;
 
 function App() {
   const [authenticate, setAuthenticate] = useState(false);
@@ -30,6 +27,8 @@ function App() {
         <Route path='/' element={<ProductAll/>} />
         <Route path='/login' element={<Login setAuthenticate={setAuthenticate} />} />
         <Route path='/products/:id' element={<PrivateRouter authenticate={authenticate}/>} />
+        <Route path='/normal' element={<NormalMall />} />
+        <Route path='/graduation'element={<GraduationMall />} />
       </Routes>
     </div>
   );
